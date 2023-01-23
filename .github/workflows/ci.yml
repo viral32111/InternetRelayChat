@@ -1,0 +1,103 @@
+name: CI
+
+on:
+  push:
+    paths:
+      - '**/Source/**.cs'
+      - '**/*.csproj'
+      - '*.sln'
+      - '.github/workflows/ci.yml'
+    branches:
+      - '**'
+    tags:
+      - '*.*.*'
+  pull_request:
+    branches:
+      - '**'
+  workflow_dispatch:
+
+jobs:
+  build-test-publish:
+    name: Build, test & publish
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build projects
+        run: dotnet build --nologo --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test --nologo --configuration Release --no-build
+
+      - name: Run examples
+        run: dotnet run --configuration Release --no-build --project ./InternetRelayChat.Message.Examples/InternetRelayChat.Message.Examples.csproj
+
+      - name: Package build
+        run: dotnet pack --nologo --configuration Release --no-build ./InternetRelayChat.Message/InternetRelayChat.Message.csproj
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: viral32111.InternetRelayChat.Message
+          path: |
+            ./InternetRelayChat.Message/bin/Release/net7.0/viral32111.InternetRelayChat.Message.dll
+            ./InternetRelayChat.Message/bin/Release/net7.0/viral32111.InternetRelayChat.Message.deps.json
+            ./InternetRelayChat.Message/bin/Release/viral32111.InternetRelayChat.Message.*.nupkg
+
+      - name: Upload examples artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: viral32111.InternetRelayChat.Message.Examples
+          path: |
+            ./InternetRelayChat.Message.Examples/bin/Release/net7.0/viral32111.InternetRelayChat.Message.Examples.dll
+            ./InternetRelayChat.Message.Examples/bin/Release/net7.0/viral32111.InternetRelayChat.Message.Examples.deps.json
+
+      - name: Upload tests artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: viral32111.InternetRelayChat.Message.Tests
+          path: |
+            ./InternetRelayChat.Message.Tests/bin/Release/net7.0/viral32111.InternetRelayChat.Message.Tests.dll
+            ./InternetRelayChat.Message.Tests/bin/Release/net7.0/viral32111.InternetRelayChat.Message.Tests.deps.json
+
+      - name: Create GitHub Packages source
+        if: ${{ github.event_name != 'pull_request' && github.ref_type == 'tag' }}
+        run: |
+          dotnet nuget add source \
+            --name github \
+            --username ${{ github.repository_owner }} \
+            --password ${{ secrets.GITHUB_TOKEN }} \
+            --store-password-in-clear-text \
+            "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
+
+      - name: Upload package
+        if: ${{ github.event_name != 'pull_request' && github.ref_type == 'tag' }}
+        run: |
+          dotnet nuget push \
+            --source github \
+            --skip-duplicate \
+            --api-key ${{ secrets.GITHUB_TOKEN }} \
+            ./InternetRelayChat.Message/bin/Release/viral32111.InternetRelayChat.Message.*.nupkg
+
+      - name: Create release
+        if: ${{ github.event_name != 'pull_request' && github.ref_type == 'tag' }}
+        uses: softprops/action-gh-release@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ github.ref_name }}
+          draft: true
+          files: |
+            ./InternetRelayChat.Message/bin/Release/net7.0/viral32111.InternetRelayChat.Message.dll
+            ./InternetRelayChat.Message/bin/Release/viral32111.InternetRelayChat.Message.*.nupkg
