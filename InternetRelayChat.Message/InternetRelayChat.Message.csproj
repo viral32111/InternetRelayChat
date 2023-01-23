@@ -1,8 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<OutputType>Exe</OutputType>
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+
+		<Title>InternetRelayChat.Message</Title>
+		<Authors>viral32111</Authors>
+		<Description>Construct &amp; parse IRC protocol messages.</Description>
+		<Copyright>Copyright (C) 2022 viral32111</Copyright>
+		<RepositoryUrl>https://github.com/viral32111/InternetRelayChat.Message</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>parser; irc; nuget; constructor</PackageTags>
+		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
+		<FileVersion>0.1.0</FileVersion>
+		<NeutralLanguage>en-GB</NeutralLanguage>
+		<Version>$(FileVersion)</Version>
+		<PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<RootNamespace>viral32111.InternetRelayChat.Message</RootNamespace>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<PackageId>viral32111.InternetRelayChat.Message</PackageId>
+		<AssemblyName>$(Authors).$(MSBuildProjectName)</AssemblyName>
+		<PackageProjectUrl>https://github.com/users/viral32111/packages/nuget/package/viral32111.InternetRelayChat.Message</PackageProjectUrl>
 	</PropertyGroup>
 </Project>

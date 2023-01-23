@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace InternetRelayChat.Message {
-	public class Program {
-		public static void Main( string[] arguments ) {
-			Console.WriteLine( "Hello World!" );
+namespace viral32111.InternetRelayChat.Message {
+	public static class Message {
+		public static string Example() {
+			return "Hello World!";
 		}
 	}
 }
