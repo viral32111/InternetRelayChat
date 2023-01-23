@@ -4,6 +4,19 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+
+		<Title>InternetRelayChat.Message.Examples</Title>
+		<Authors>viral32111</Authors>
+		<Description>Construct &amp; parse IRC protocol messages.</Description>
+		<Copyright>Copyright (C) 2022 viral32111</Copyright>
+		<RepositoryUrl>https://github.com/viral32111/InternetRelayChat.Message</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
+		<FileVersion>0.1.0</FileVersion>
+		<NeutralLanguage>en-GB</NeutralLanguage>
+		<Version>$(FileVersion)</Version>
+		<RootNamespace>viral32111.InternetRelayChat.Message.Examples</RootNamespace>
+		<AssemblyName>$(Authors).$(MSBuildProjectName)</AssemblyName>
 	</PropertyGroup>
 
 	<ItemGroup>
