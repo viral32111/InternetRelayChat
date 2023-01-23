@@ -1,5 +1,7 @@
 # InternetRelayChat.Message
 
+[![CI](https://github.com/viral32111/InternetRelayChat.Message/actions/workflows/ci.yml/badge.svg)](https://github.com/viral32111/InternetRelayChat.Message/actions/workflows/ci.yml) [![CodeQL](https://github.com/viral32111/InternetRelayChat.Message/actions/workflows/codeql.yml/badge.svg)](https://github.com/viral32111/InternetRelayChat.Message/actions/workflows/codeql.yml)
+
 This is a NuGet package for .NET Core 7.0 for constructing and parsing [Internet Relay Chat messages](https://datatracker.ietf.org/doc/html/rfc1459.html#section-2.3.1).
 
 **NOTE: Currently under development, functionality is not guaranteed!**
