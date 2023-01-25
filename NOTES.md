@@ -16,14 +16,14 @@ dotnet new console --language C# --framework net7.0 --name InternetRelayChat.Mes
 dotnet new xunit --language C# --framework net7.0 --name InternetRelayChat.Message.Tests
 ```
 
-### Add projects to solution
+## Add projects to solution
 ```sh
 dotnet sln add ./InternetRelayChat.Message/InternetRelayChat.Message.csproj
 dotnet sln add ./InternetRelayChat.Message.Examples/InternetRelayChat.Message.Examples.csproj
 dotnet sln add ./InternetRelayChat.Message.Tests/InternetRelayChat.Message.Tests.csproj
 ```
 
-# Add reference to main project in example & testing projects
+## Add reference to main project in example & testing projects
 ```sh
 dotnet add ./InternetRelayChat.Message.Examples/InternetRelayChat.Message.Examples.csproj reference ./InternetRelayChat.Message/InternetRelayChat.Message.csproj
 dotnet add ./InternetRelayChat.Message.Tests/InternetRelayChat.Message.Tests.csproj reference ./InternetRelayChat.Message/InternetRelayChat.Message.csproj
