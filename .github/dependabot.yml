@@ -1,25 +1,26 @@
 version: 2
 updates:
+
   # Workflows
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
+      interval: monthly
 
   # Package
   - package-ecosystem: nuget
     directory: /InternetRelayChat.Message/
     schedule:
-      interval: weekly
+      interval: monthly
 
   # Examples
   - package-ecosystem: nuget
     directory: /InternetRelayChat.Message.Examples/
     schedule:
-      interval: weekly
+      interval: monthly
 
   # Tests
   - package-ecosystem: nuget
     directory: /InternetRelayChat.Message.Tests/
     schedule:
-      interval: weekly
+      interval: monthly
