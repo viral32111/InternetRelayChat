@@ -9,7 +9,7 @@ This is a barebones client-side implementation of the [Internet Relay Chat (IRC)
 
 ## Background
 
-I made this for my [Twitch Bot](https://github.com/viral32111/TwitchBot) to use as the [Twitch Chat API](https://dev.twitch.tv/docs/irc/) operates over IRC.
+I made this for use in my [Twitch Bot](https://github.com/viral32111/TwitchBot) as the [Twitch Chat API](https://dev.twitch.tv/docs/irc/) operates over IRC.
 
 This [was originally hardcoded into the bot](https://github.com/viral32111/TwitchBot/tree/961fc729a8fc151686eb3e7c2c371768c9a81f7f/Source/InternetRelayChat). However, I separated it into its own project in January of 2023 to ease development.
 

@@ -49,6 +49,7 @@ namespace viral32111.InternetRelayChat {
 		}
 
 		// Client message to be sent to a server, does not have all components
+		/*
 		public Message(
 			string command,
 			string? middle = null,
@@ -60,6 +61,23 @@ namespace viral32111.InternetRelayChat {
 			Middle = middle;
 			Parameters = parameters;
 		}
+
+		public Message(
+			string command
+		) {
+			Tags = new();
+			Command = command;
+		}
+
+		public Message(
+			string command,
+			string middle
+		) {
+			Tags = new();
+			Command = command;
+			Middle = middle;
+		}
+		*/
 
 		// Parses a single IRC message from a string
 		public static Message Parse( string messageToParse ) {
