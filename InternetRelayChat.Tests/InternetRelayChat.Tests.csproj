@@ -5,17 +5,17 @@
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
 
-		<Title>InternetRelayChat.Message.Tests</Title>
+		<Title>InternetRelayChat.Tests</Title>
 		<Authors>viral32111</Authors>
 		<Description>Construct &amp; parse IRC protocol messages.</Description>
 		<Copyright>Copyright (C) 2022 viral32111</Copyright>
-		<RepositoryUrl>https://github.com/viral32111/InternetRelayChat.Message</RepositoryUrl>
+		<RepositoryUrl>https://github.com/viral32111/InternetRelayChat</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
 		<FileVersion>0.1.0</FileVersion>
 		<NeutralLanguage>en-GB</NeutralLanguage>
 		<Version>$(FileVersion)</Version>
-		<RootNamespace>viral32111.InternetRelayChat.Message.Tests</RootNamespace>
+		<RootNamespace>viral32111.InternetRelayChat.Tests</RootNamespace>
 		<AssemblyName>$(Authors).$(MSBuildProjectName)</AssemblyName>
 	</PropertyGroup>
 
@@ -33,6 +33,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\InternetRelayChat.Message\InternetRelayChat.Message.csproj" />
+		<ProjectReference Include="..\InternetRelayChat\InternetRelayChat.csproj" />
 	</ItemGroup>
 </Project>

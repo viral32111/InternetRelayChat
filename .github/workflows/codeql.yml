@@ -1,5 +1,3 @@
-# This workflow analyses code for security vulnerabilities and alerts if any are discovered.
-
 name: CodeQL
 
 on:

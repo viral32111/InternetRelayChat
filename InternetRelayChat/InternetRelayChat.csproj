@@ -4,11 +4,11 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
-		<Title>InternetRelayChat.Message</Title>
+		<Title>InternetRelayChat</Title>
 		<Authors>viral32111</Authors>
 		<Description>Construct &amp; parse IRC protocol messages.</Description>
 		<Copyright>Copyright (C) 2022 viral32111</Copyright>
-		<RepositoryUrl>https://github.com/viral32111/InternetRelayChat.Message</RepositoryUrl>
+		<RepositoryUrl>https://github.com/viral32111/InternetRelayChat</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>parser; irc; nuget; constructor</PackageTags>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
@@ -17,10 +17,10 @@
 		<Version>$(FileVersion)</Version>
 		<PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-		<RootNamespace>viral32111.InternetRelayChat.Message</RootNamespace>
+		<RootNamespace>viral32111.InternetRelayChat</RootNamespace>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<PackageId>viral32111.InternetRelayChat.Message</PackageId>
+		<PackageId>viral32111.InternetRelayChat</PackageId>
 		<AssemblyName>$(Authors).$(MSBuildProjectName)</AssemblyName>
-		<PackageProjectUrl>https://github.com/users/viral32111/packages/nuget/package/viral32111.InternetRelayChat.Message</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/users/viral32111/packages/nuget/package/viral32111.InternetRelayChat</PackageProjectUrl>
 	</PropertyGroup>
 </Project>

@@ -1,32 +1,19 @@
-# InternetRelayChat.Message
+# Internet Relay Chat
 
-[![CI](https://github.com/viral32111/InternetRelayChat.Message/actions/workflows/ci.yml/badge.svg)](https://github.com/viral32111/InternetRelayChat.Message/actions/workflows/ci.yml) [![CodeQL](https://github.com/viral32111/InternetRelayChat.Message/actions/workflows/codeql.yml/badge.svg)](https://github.com/viral32111/InternetRelayChat.Message/actions/workflows/codeql.yml)
+[![CI](https://github.com/viral32111/InternetRelayChat.Message/actions/workflows/ci.yml/badge.svg)](https://github.com/viral32111/InternetRelayChat.Message/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/viral32111/InternetRelayChat.Message/actions/workflows/codeql.yml/badge.svg)](https://github.com/viral32111/InternetRelayChat.Message/actions/workflows/codeql.yml)
 
-This is a NuGet package for .NET Core 7.0 for constructing and parsing [Internet Relay Chat messages](https://datatracker.ietf.org/doc/html/rfc1459.html#section-2.3.1).
+This is a barebones client-side implementation of the [Internet Relay Chat (IRC) messaging protocol](https://datatracker.ietf.org/doc/html/rfc1459.html) for my [Twitch Bot](https://github.com/viral32111/TwitchBot).
 
-**NOTE: Currently under development, functionality is not guaranteed!**
+**NOTE: This is currently under development, so functionality is not guaranteed!**
 
 ## Background
 
-This is made for use in my [Twitch Bot](https://github.com/viral32111/TwitchBot) as the [Twitch Chat API](https://dev.twitch.tv/docs/irc/) uses IRC. It was originally hardcoded straight into it, however to ease development I separated it in January of 2023.
+I made this for my [Twitch Bot](https://github.com/viral32111/TwitchBot) to use as the [Twitch Chat API](https://dev.twitch.tv/docs/irc/) operates over IRC.
 
-I also wanted a decent project to try out automated unit testing & test-driven development in .NET for the first time.
+This [was originally hardcoded into the bot](https://github.com/viral32111/TwitchBot/tree/961fc729a8fc151686eb3e7c2c371768c9a81f7f/Source/InternetRelayChat). However, I separated it into its own project in January of 2023 to ease development.
 
-## Usage
-
-1. Add the latest version of the [`viral32111.InternetRelayChat.Message`](https://github.com/users/viral32111/packages/nuget/package/viral32111.InternetRelayChat.Message) NuGet package to your .NET Core project:
-
-```sh
-dotnet add package viral32111.InternetRelayChat.Message
-```
-
-2. Include the namespace at the beginning of your C# source file(s):
-
-```csharp
-using viral32111.InternetRelayChat.Message;
-```
-
-3. Use the package! See [DOCS.md](/DOCS.md) for documentation.
+I also wanted a project to try out automated unit testing and test-driven development in .NET for the first time.
 
 ## License
 

@@ -9,18 +9,18 @@ updates:
 
   # Package
   - package-ecosystem: nuget
-    directory: /InternetRelayChat.Message/
+    directory: /InternetRelayChat/
     schedule:
       interval: monthly
 
   # Examples
   - package-ecosystem: nuget
-    directory: /InternetRelayChat.Message.Examples/
+    directory: /InternetRelayChat.Examples/
     schedule:
       interval: monthly
 
   # Tests
   - package-ecosystem: nuget
-    directory: /InternetRelayChat.Message.Tests/
+    directory: /InternetRelayChat.Tests/
     schedule:
       interval: monthly

@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetRelayChat.Message", "InternetRelayChat.Message\InternetRelayChat.Message.csproj", "{0A187B6A-ED87-4757-B39D-81D0DD649723}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetRelayChat", "InternetRelayChat\InternetRelayChat.csproj", "{0A187B6A-ED87-4757-B39D-81D0DD649723}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetRelayChat.Message.Examples", "InternetRelayChat.Message.Examples\InternetRelayChat.Message.Examples.csproj", "{623F6716-2AC6-4859-B9F1-2FF29FC31844}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetRelayChat.Examples", "InternetRelayChat.Examples\InternetRelayChat.Examples.csproj", "{623F6716-2AC6-4859-B9F1-2FF29FC31844}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetRelayChat.Message.Tests", "InternetRelayChat.Message.Tests\InternetRelayChat.Message.Tests.csproj", "{98C36084-026F-437C-9052-8EABFCD976D1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetRelayChat.Tests", "InternetRelayChat.Tests\InternetRelayChat.Tests.csproj", "{98C36084-026F-437C-9052-8EABFCD976D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
