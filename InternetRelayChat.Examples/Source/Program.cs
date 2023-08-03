@@ -6,12 +6,12 @@ namespace viral32111.InternetRelayChat.Examples;
 
 public class Program {
 
-	private static readonly string ircServerName = ""; // irc.chat.twitch.tv;
+	private static readonly string ircServerName = "irc.chat.twitch.tv";
 	private static readonly string ircClientUser = "";
 	private static readonly string ircClientPassword = "";
 
 	public static async Task Main( string[] arguments ) {
-		
+
 		CancellationTokenSource cancellationTokenSource = new();
 		Client ircClient = new();
 	
