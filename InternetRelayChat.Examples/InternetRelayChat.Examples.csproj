@@ -1,25 +1,31 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<OutputType>Exe</OutputType>
 		<TargetFramework>net7.0</TargetFramework>
-		<ImplicitUsings>disable</ImplicitUsings>
+		<OutputType>Exe</OutputType>
 		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<RootNamespace>viral32111.InternetRelayChat.Examples</RootNamespace>
 
 		<Title>InternetRelayChat.Examples</Title>
 		<Authors>viral32111</Authors>
 		<Description>Construct &amp; parse IRC protocol messages.</Description>
-		<Copyright>Copyright (C) 2022 viral32111</Copyright>
-		<RepositoryUrl>https://github.com/viral32111/InternetRelayChat</RepositoryUrl>
+		<Copyright>Copyright (C) 2022-2023 viral32111</Copyright>
 		<RepositoryType>git</RepositoryType>
-		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
-		<FileVersion>0.1.0</FileVersion>
+		<RepositoryUrl>https://github.com/viral32111/InternetRelayChat</RepositoryUrl>
 		<NeutralLanguage>en-GB</NeutralLanguage>
+
+		<FileVersion>0.1.0</FileVersion>
 		<Version>$(FileVersion)</Version>
-		<RootNamespace>viral32111.InternetRelayChat.Examples</RootNamespace>
 		<AssemblyName>$(Authors).$(MSBuildProjectName)</AssemblyName>
+		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\InternetRelayChat\InternetRelayChat.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
 	</ItemGroup>
 </Project>
