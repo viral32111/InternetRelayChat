@@ -239,7 +239,7 @@ public class Client {
 	/// <param name="cancellationToken">The token for cancelling asynchronous operations.</param>
 	/// <returns>The response messages from the IRC server.</returns>
 	public async Task<Message[]> SendWaitResponseAsync( Message message, CancellationToken? cancellationToken = null ) {
-		// TODO: Does this ever receive anything due to the receieve in background task?
+		// TODO: Does this ever receive anything due to the recieve in background task?
 		await SendAsync( message, cancellationToken ?? cancellationTokenSource.Token );
 		return await ReceiveAsync( cancellationToken: cancellationToken ?? cancellationTokenSource.Token );
 	}

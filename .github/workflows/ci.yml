@@ -96,7 +96,7 @@ jobs:
         run: dotnet nuget push --source github --skip-duplicate --api-key ${{ secrets.GITHUB_TOKEN }} InternetRelayChat/viral32111.InternetRelayChat.*.nupkg
 
       - name: Push to NuGet Gallery
-        run: dotnet nuget push --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} InternetRelayChat/viral32111.JsonExtensions.*.nupkg
+        run: dotnet nuget push --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} InternetRelayChat/viral32111.InternetRelayChat.*.nupkg
 
   release:
     name: Release
