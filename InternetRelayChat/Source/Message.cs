@@ -86,7 +86,7 @@ namespace viral32111.InternetRelayChat {
 			// Match the message using the regular expressions
 			Match messageStartMatch = MessageStartPattern.Match( messageToParse );
 			if ( messageStartMatch.Success == false ) throw new ArgumentException( "Message is not a valid IRC message", nameof( messageToParse ) );
-			Match messageEndMatch = MessageEndPattern.Match( messageToParse.Substring( messageStartMatch.Length ) );
+			Match messageEndMatch = MessageEndPattern.Match( messageToParse[ messageStartMatch.Length.. ] );
 			if ( messageEndMatch.Success == false ) throw new ArgumentException( "Message is not a valid IRC message", nameof( messageToParse ) );
 
 			// Store all the captured values, they may be null
@@ -120,7 +120,7 @@ namespace viral32111.InternetRelayChat {
 		public static Message[] ParseMany( string messagesToParse, string lineDelimiter = "\r\n" ) =>
 			messagesToParse.Split( lineDelimiter )
 				.Where( messageToParse => !string.IsNullOrWhiteSpace( messageToParse ) ) // Skip empty messages
-				.Select( messageToParse => Parse( messageToParse ) )
+				.Select( Parse )
 				.ToArray();
 
 		// Parses multiple IRC messages in a byte array, defaults to UTF-8

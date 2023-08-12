@@ -24,7 +24,7 @@ namespace viral32111.InternetRelayChat {
 
 		// Converts to a string of extension tags
 		public string? Join( string tagSeperator = ";", string keyValueSeperator = "=" ) =>
-			this.Count == 0 ? null : string.Join(
+			Count == 0 ? null : string.Join(
 				tagSeperator,
 				this.Select( tag => string.Concat( tag.Key, keyValueSeperator, tag.Value ) )
 			);

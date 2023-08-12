@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.Extensions.Logging;
 
 namespace viral32111.InternetRelayChat;
 
@@ -45,6 +46,10 @@ public class Client {
 	public event SecuredEventHandler? SecuredEvent;
 	public delegate void SecuredEventHandler( object sender, SecuredEventArgs e );
 
+	// Logging
+	private readonly ILogger logger;
+	public Client( ILogger? logger = null ) => this.logger = logger ?? new LoggerFactory().CreateLogger<Client>();
+
 	/// <summary>
 	/// Checks if the client is connected to an IRC server.
 	/// </summary>
@@ -77,9 +82,10 @@ public class Client {
 	public async Task OpenAsync( string remoteHost, int remotePort = Constants.InsecurePort, bool? beSecure = null, X509CertificateCollection? localCertificates = null, CancellationToken? cancellationToken = null ) {
 		if ( localCertificates != null && !( beSecure ?? remotePort == Constants.SecurePort ) ) throw new ArgumentException( "Local certificates require secure connections", nameof( localCertificates ) );
 		if ( localCertificates != null && localCertificates.Count == 0 ) throw new ArgumentException( "Local certificates collection is empty", nameof( localCertificates ) );
-		
-		if ( this.IsConnected() ) throw new InvalidOperationException( "Client already connected" );
 
+		if ( IsConnected() ) throw new InvalidOperationException( "Client already connected" );
+
+		logger.LogDebug( "Opening TCP connection to '{0}' on port {1}...", remoteHost, remotePort );
 		await tcpClient.ConnectAsync( remoteHost, remotePort, cancellationToken ?? cancellationTokenSource.Token );
 		networkStream = tcpClient.GetStream();
 
@@ -87,12 +93,15 @@ public class Client {
 		IPEndPoint remoteEndPoint = ( IPEndPoint? ) tcpClient.Client.RemoteEndPoint ?? throw new InvalidOperationException( "Remote end-point is null" );
 		string ipAddress = remoteEndPoint.Address.ToString();
 		int portNumber = remoteEndPoint.Port;
+		logger.LogDebug( "Remote address is {0}:{1}.", ipAddress, portNumber );
 
 		if ( beSecure ?? remotePort == Constants.SecurePort ) {
 			if ( secureStream != null ) throw new InvalidOperationException( "Secure network stream already exists" );
 
+			logger.LogDebug( "Opening secure network stream..." );
 			secureStream = new( networkStream, false );
 
+			logger.LogDebug( "Authenticating as client to server '{0}'...", secureStream.TargetHostName );
 			await secureStream.AuthenticateAsClientAsync( new SslClientAuthenticationOptions() {
 				TargetHost = remoteHost,
 				EnabledSslProtocols = SslProtocols.Tls13 | SslProtocols.Tls12,
@@ -108,8 +117,10 @@ public class Client {
 
 			// Should never be null to the validation callback
 			X509Certificate remoteCertificate = secureStream.RemoteCertificate ?? throw new InvalidCastException( "No remote certificate" );
+			logger.LogDebug( "Remote certificate is for '{0}'.", remoteCertificate.Subject );
 
-			this.SecuredEvent?.Invoke( this, new() {
+			logger.LogTrace( "Invoking secured event..." );
+			SecuredEvent?.Invoke( this, new() {
 				RemoteName = secureStream.TargetHostName,
 				RemoteAddress = ipAddress,
 				RemotePort = portNumber,
@@ -135,7 +146,8 @@ public class Client {
 			} );
 		}
 
-		this.OpenedEvent?.Invoke( this, new() {
+		logger.LogTrace( "Invoking opened event..." );
+		OpenedEvent?.Invoke( this, new() {
 			RemoteName = remoteHost,
 			RemoteAddress = ipAddress,
 			RemotePort = portNumber
@@ -151,7 +163,7 @@ public class Client {
 	/// Thrown when the client is not connected to an IRC server.
 	/// </exception>
 	public async Task CloseAsync( CloseReason closeReason = CloseReason.ByClient, CancellationToken? cancellationToken = null ) {
-		if ( !this.IsConnected() ) throw new InvalidOperationException( "Client not connected" );
+		if ( !IsConnected() ) throw new InvalidOperationException( "Client not connected" );
 
 		// Should never be null
 		IPEndPoint remoteEndPoint = ( IPEndPoint? ) tcpClient.Client.RemoteEndPoint ?? throw new InvalidOperationException( "Remote end-point is null" );
@@ -159,18 +171,23 @@ public class Client {
 		await SendAsync( new( Command.Quit ), cancellationToken ?? cancellationTokenSource.Token );
 
 		if ( secureStream != null ) {
+			logger.LogDebug( "Closing secure network stream with '{0}'...", secureStream.TargetHostName );
 			secureStream.Close();
 			secureStream = null;
 		}
 
+		logger.LogDebug( "Closing TCP connection..." );
 		tcpClient.Close();
 
-		this.ClosedEvent?.Invoke( this, new() {
+		logger.LogTrace( "Invoking closed event..." );
+		ClosedEvent?.Invoke( this, new() {
 			RemoteAddress = remoteEndPoint.Address.ToString(),
 			RemotePort = remoteEndPoint.Port,
 
 			CloseReason = closeReason
 		} );
+
+		cancellationTokenSource.Cancel();
 	}
 
 	/// <summary>
@@ -183,9 +200,9 @@ public class Client {
 	/// Thrown when the client is not connected to an IRC server.
 	/// </exception>
 	public async Task SendAsync( Message message, CancellationToken? cancellationToken = null ) {
-		if ( !this.IsConnected() ) throw new InvalidOperationException( "Client not connected" );
+		if ( !IsConnected() ) throw new InvalidOperationException( "Client not connected" );
 
-		Console.WriteLine( "Sending message '{0}'...", message.ToString() );
+		logger.LogDebug( "Sending message '{0}'...", message.ToString() );
 
 		byte[] messageBytes = Encoding.UTF8.GetBytes( message.ToString() );
 
@@ -219,9 +236,9 @@ public class Client {
 	/// Thrown when the client is not connected to an IRC server.
 	/// </exception>
 	public async Task<Message[]> ReceiveAsync( int bufferSize = Constants.ReceiveBufferSize, Encoding? encoding = null, CancellationToken? cancellationToken = null ) {
-		if ( !this.IsConnected() ) throw new InvalidOperationException( "Client not connected" );
+		if ( !IsConnected() ) throw new InvalidOperationException( "Client not connected" );
 
-		int receivedByteCount = 0;
+		int receivedByteCount;
 		byte[] receivedBytes = new byte[ bufferSize ];
 
 		if ( secureStream != null ) {
@@ -230,9 +247,14 @@ public class Client {
 			receivedByteCount = await networkStream.ReadAsync( receivedBytes, cancellationToken ?? cancellationTokenSource.Token );
 		} else throw new InvalidOperationException( "No network stream" );
 
-		if ( receivedByteCount == 0 ) await CloseAsync( CloseReason.ByServer, cancellationToken ?? cancellationTokenSource.Token );
+		if ( receivedByteCount == 0 ) {
+			logger.LogDebug( "No more bytes to receive! Closing connection..." );
+			await CloseAsync( CloseReason.ByServer, cancellationToken ?? cancellationTokenSource.Token );
+		}
 
 		string receivedString = ( encoding ?? Encoding.UTF8 ).GetString( receivedBytes, 0, receivedByteCount );
+		logger.LogDebug( "Received {0} bytes: '{1}'", receivedByteCount, receivedString );
+
 		return Message.ParseMany( receivedString );
 	}
 

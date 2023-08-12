@@ -6,4 +6,3 @@ public static class Extensions {
 	public static string? NullIfWhiteSpace( this string? str ) => string.IsNullOrWhiteSpace( str ) ? null : str;
 
 }
-
