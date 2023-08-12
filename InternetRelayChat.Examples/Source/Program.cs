@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Net.Sockets;
 
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
@@ -44,39 +45,52 @@ public class Program {
 	private static readonly string ircClientPassword = "P4ssw0rd!";
 
 	public static async Task Main() {
-		logger.LogInformation( "Hello, World!" );
+		logger.LogInformation( "Hello World!" );
 
 		CancellationTokenSource cancellationTokenSource = new();
-		Client ircClient = new( logger );
+		Client ircClient = new( AddressFamily.InterNetwork, logger );
 	
 		ircClient.OpenedEvent += ( object sender, OpenedEventArgs e ) => {
-			logger.LogInformation( "Connection to {0}:{1} ({2}) opened", e.RemoteAddress, e.RemotePort, e.RemoteName );
+			logger.LogInformation( "Connection to {0}:{1} ({2}) opened.", e.RemoteAddress, e.RemotePort, e.RemoteName );
 		};
 
 		ircClient.ClosedEvent += ( object sender, ClosedEventArgs e ) => {
-			logger.LogInformation( "Connection with {0}:{1} closed", e.RemoteAddress, e.RemotePort );
+			logger.LogInformation( "Connection with {0}:{1} closed.", e.RemoteAddress, e.RemotePort );
 		};
 
 		ircClient.SecuredEvent += ( object sender, SecuredEventArgs e ) => {
-			logger.LogInformation( "Connection with {0}:{1} ({2}) secured with {3} & {4} (Encrypted: {5}, Signed: {6}, Authenticated: {7})", e.RemoteAddress, e.RemotePort, e.RemoteName, e.Protocol, e.CipherAlgorithm, e.IsEncrypted, e.IsSigned, e.IsAuthenticated );
+			logger.LogInformation( "Connection with {0}:{1} ({2}) secured with {3} & {4} (Encrypted: {5}, Signed: {6}, Authenticated: {7}).", e.RemoteAddress, e.RemotePort, e.RemoteName, e.Protocol, e.CipherAlgorithm, e.IsEncrypted, e.IsSigned, e.IsAuthenticated );
+		};
+
+		ircClient.MessagedEvent += ( object sender, MessagedEventArgs e ) => {
+			logger.LogInformation( "Received message: '{0}'.", e.Message.ToString() );
+
+			/*
+			if ( e.message.Parameters?.Contains( "No Ident response" ) == true ) {
+				logger.LogInformation( "Registering..." );
+
+				await ircClient.SendAsync( new( command: Command.User, middle: $"{ GenerateRandomString( 12 ) } { ircServerName } { ircServerName }", parameters: ircClientUser ) );
+				await ircClient.SendAsync( new( command: Command.Nick, middle: ircClientUser ) );
+
+				logger.LogInformation( "Registered." );
+			}
+			*/
 		};
 
 		logger.LogInformation( "Opening connection..." );
 		await ircClient.OpenAsync( ircServerName, beSecure: false, cancellationToken: cancellationTokenSource.Token );
 		logger.LogInformation( "Connection opened." );
 
-		logger.LogInformation( "Starting receive in background task..." );
-		Task receiveTask = ReceiveInBackground( ircClient, cancellationTokenSource.Token );
-		logger.LogInformation( "Started receiving in background task..." );
-
-		/*logger.LogInformation( "Pinging..." );
+		/*
+		logger.LogInformation( "Pinging..." );
 		await ircClient.SendAsync( new( command: "PING" ) );
 		logger.LogInformation( "Pinged." );
 		*/
 
-
+		/*
 		await ircClient.SendAsync( new( command: Command.Password, middle: ircClientPassword ) );
 		await ircClient.SendAsync( new( command: Command.Nick, middle: ircClientUser ) );
+		*/
 
 		/*
 		logger.LogInformation( "Closing connection..." );
@@ -84,32 +98,9 @@ public class Program {
 		logger.LogInformation( "Connection closed." );
 		*/
 
-		try {
-			logger.LogInformation( "Waiting for receive task to complete..." );
-			await receiveTask;
-			logger.LogInformation( "Receive task completed." );
-		} catch ( IOException exception ) {
-			logger.LogWarning( "I/O exception while waiting for receive task: '{0}'!", exception.Message );
-		}
+		logger.LogInformation( "Waiting for client..." );
+		await ircClient.WaitAsync();
 
-	}
-
-	private static async Task ReceiveInBackground( Client ircClient, CancellationToken cancellationToken ) {
-		while ( ircClient.IsConnected() && !cancellationToken.IsCancellationRequested ) {
-			Message[] messages = await ircClient.ReceiveAsync( cancellationToken: cancellationToken );
-			foreach ( Message message in messages ) {
-				logger.LogInformation( "Received message: '{0}'", message.ToString() );
-
-				/*if ( message.Parameters?.Contains( "No Ident response" ) == true ) {
-					logger.LogInformation( "Registering..." );
-	
-					await ircClient.SendAsync( new( command: Command.User, middle: $"{ GenerateRandomString( 12 ) } { ircServerName } { ircServerName }", parameters: ircClientUser ) );
-					await ircClient.SendAsync( new( command: Command.Nick, middle: ircClientUser ) );
-
-					logger.LogInformation( "Registered." );
-				}*/
-			}
-		}
 	}
 
 	private static string GenerateRandomString( int length ) =>

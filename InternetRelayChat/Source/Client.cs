@@ -10,7 +10,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
+
 using Microsoft.Extensions.Logging;
+using System.IO;
 
 namespace viral32111.InternetRelayChat;
 
@@ -20,10 +22,11 @@ namespace viral32111.InternetRelayChat;
 /// <seealso href="https://www.rfc-editor.org/rfc/rfc1459" />
 public class Client {
 
-	protected readonly TcpClient tcpClient = new( AddressFamily.InterNetwork ); // No IPv6
+	protected readonly TcpClient tcpClient;
 	protected NetworkStream? networkStream = null;
 	protected SslStream? secureStream = null;
 	protected CancellationTokenSource cancellationTokenSource = new();
+	protected Task? receiveInBackgroundTask = null;
 
 	/// <summary>
 	/// Event that fires after the client connection to the IRC server begins.
@@ -46,9 +49,17 @@ public class Client {
 	public event SecuredEventHandler? SecuredEvent;
 	public delegate void SecuredEventHandler( object sender, SecuredEventArgs e );
 
+	/// <summary>
+	/// Event that fires after the client recieves a message from the IRC server.
+	/// </summary>
+	/// <seealso cref="MessagedEventArgs" />
+	public event MessagedEventHandler? MessagedEvent;
+	public delegate void MessagedEventHandler( object sender, MessagedEventArgs e );
+
 	// Logging
 	private readonly ILogger logger;
-	public Client( ILogger? logger = null ) => this.logger = logger ?? new LoggerFactory().CreateLogger<Client>();
+	public Client( AddressFamily addressFamily = AddressFamily.InterNetwork, ILogger? logger = null )
+		=> ( tcpClient, this.logger ) = ( new( addressFamily ), logger ?? new LoggerFactory().CreateLogger<Client>() );
 
 	/// <summary>
 	/// Checks if the client is connected to an IRC server.
@@ -146,7 +157,10 @@ public class Client {
 			} );
 		}
 
-		logger.LogTrace( "Invoking opened event..." );
+		logger.LogDebug( "Creating receive messages in background task..." );
+		receiveInBackgroundTask = ReceiveInBackgroundAsync( cancellationToken ?? cancellationTokenSource.Token );
+
+		logger.LogTrace( "Invoking opened (ready) event..." );
 		OpenedEvent?.Invoke( this, new() {
 			RemoteName = remoteHost,
 			RemoteAddress = ipAddress,
@@ -176,8 +190,13 @@ public class Client {
 			secureStream = null;
 		}
 
+		logger.LogDebug( "Propagating cancellation signal..." );
+		cancellationTokenSource.Cancel();
+
 		logger.LogDebug( "Closing TCP connection..." );
 		tcpClient.Close();
+
+		//await WaitAsync();
 
 		logger.LogTrace( "Invoking closed event..." );
 		ClosedEvent?.Invoke( this, new() {
@@ -186,8 +205,6 @@ public class Client {
 
 			CloseReason = closeReason
 		} );
-
-		cancellationTokenSource.Cancel();
 	}
 
 	/// <summary>
@@ -222,6 +239,7 @@ public class Client {
 	/// <param name="cancellationToken">The token for cancelling asynchronous operations.</param>
 	/// <returns>The response messages from the IRC server.</returns>
 	public async Task<Message[]> SendWaitResponseAsync( Message message, CancellationToken? cancellationToken = null ) {
+		// TODO: Does this ever receive anything due to the receieve in background task?
 		await SendAsync( message, cancellationToken ?? cancellationTokenSource.Token );
 		return await ReceiveAsync( cancellationToken: cancellationToken ?? cancellationTokenSource.Token );
 	}
@@ -253,9 +271,47 @@ public class Client {
 		}
 
 		string receivedString = ( encoding ?? Encoding.UTF8 ).GetString( receivedBytes, 0, receivedByteCount );
-		logger.LogDebug( "Received {0} bytes: '{1}'", receivedByteCount, receivedString );
+		logger.LogDebug( "Received {0}/{1} bytes: '{1}'.", receivedByteCount, bufferSize, receivedString.TrimEnd( '\r', '\n' ) );
 
 		return Message.ParseMany( receivedString );
+	}
+
+	/// <summary>
+	/// Waits for the receive in background task to complete.
+	/// Silently fails if the task does not exist (i.e., client not connected).
+	/// </summary>
+	public async Task WaitAsync() {
+		if ( receiveInBackgroundTask == null ) return;
+
+		try {
+			logger.LogDebug( "Waiting for receive in background task to complete..." );
+			await receiveInBackgroundTask;
+			logger.LogDebug( "Receive in background task completed." );
+		} catch ( IOException exception ) {
+			logger.LogWarning( "I/O exception while waiting for recieve in background task! ({0})", exception.Message );
+		}
+	}
+
+	private async Task ReceiveInBackgroundAsync( CancellationToken cancellationToken ) {
+		if ( !IsConnected() ) throw new InvalidOperationException( "Client not connected" );
+
+		logger.LogDebug( "Started receiving messages..." );
+
+		while ( IsConnected() && !cancellationToken.IsCancellationRequested ) {
+			Message[] messages = await ReceiveAsync( cancellationToken: cancellationToken );
+			logger.LogDebug( "Received {0} message(s).", messages.Length );
+
+			if ( messages.Length == 0 ) break;
+
+			logger.LogTrace( "Invoking messaged event(s)..." );
+			foreach ( Message message in messages ) {
+				MessagedEvent?.Invoke( this, new() {
+					Message = message
+				} );
+			}
+		}
+
+		logger.LogDebug( "Finished receiving messages." );
 	}
 
 }
