@@ -3,11 +3,7 @@ name: CI
 on:
   push:
     paths:
-      - 'InternetRelayChat/**/*'
-      - 'InternetRelayChat.Examples/**/*'
-      - 'InternetRelayChat.Tests/**/*'
-      - 'InternetRelayChat.sln'
-      - '.github/workflows/ci.yml'
+      - '**'
     branches:
       - '**'
     tags:
