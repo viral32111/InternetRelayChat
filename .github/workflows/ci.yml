@@ -46,7 +46,7 @@ jobs:
         run: dotnet pack --nologo --configuration Release --no-build InternetRelayChat/InternetRelayChat.csproj
 
       - name: Upload package artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: viral32111.InternetRelayChat
           path: |
@@ -54,13 +54,13 @@ jobs:
             InternetRelayChat/bin/Release/*.nupkg
 
       - name: Upload examples artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: viral32111.InternetRelayChat.Examples
           path: InternetRelayChat.Examples/bin/Release/net7.0/*
 
       - name: Upload tests artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: viral32111.InternetRelayChat.Tests
           path: InternetRelayChat.Tests/bin/Release/net7.0/*
