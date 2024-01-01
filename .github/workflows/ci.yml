@@ -80,7 +80,7 @@ jobs:
           dotnet-version: 7.0.x
 
       - name: Download package artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: viral32111.InternetRelayChat
           path: InternetRelayChat
@@ -103,19 +103,19 @@ jobs:
       contents: write
     steps:
       - name: Download package artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: viral32111.InternetRelayChat
           path: InternetRelayChat
 
       - name: Download examples artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: viral32111.InternetRelayChat.Examples
           path: InternetRelayChat.Examples
 
       - name: Download tests artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: viral32111.InternetRelayChat.Tests
           path: InternetRelayChat.Tests
