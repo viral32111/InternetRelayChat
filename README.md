@@ -9,7 +9,7 @@
 ![Nuget](https://img.shields.io/nuget/dt/viral32111.InternetRelayChat?label=Installs)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/viral32111/InternetRelayChat?label=Commits)
 
-This is a bare-bones client-side implementation of the [Internet Relay Chat (IRC) messaging protocol](https://datatracker.ietf.org/doc/html/rfc1459.html) for my [Twitch Bot](https://github.com/viral32111/InternetRelayChat).
+This is a bare-bones client-side implementation of the [Internet Relay Chat (IRC) messaging protocol](https://datatracker.ietf.org/doc/html/rfc1459.html) for my [Twitch Bot](https://github.com/viral32111/twitch-bot).
 
 ## 📜 Background
 
