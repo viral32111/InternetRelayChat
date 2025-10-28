@@ -28,5 +28,4 @@ public static class Command {
 	/// <seealso href="https://www.rfc-editor.org/rfc/rfc1459#section-4.1.3" />
 	public const string User = "USER";
 
-
 }

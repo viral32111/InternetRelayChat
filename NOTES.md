@@ -5,15 +5,15 @@
 dotnet new sln --name InternetRelayChat
 ```
 
-## Create C# console projects (.NET 7.0)
+## Create C# console projects (.NET 9.0)
 ```sh
-dotnet new console --language C# --framework net7.0 --name InternetRelayChat
-dotnet new console --language C# --framework net7.0 --name InternetRelayChat.Examples
+dotnet new console --language C# --framework net9.0 --name InternetRelayChat
+dotnet new console --language C# --framework net9.0 --name InternetRelayChat.Examples
 ```
 
-## Create C# testing project (.NET 7.0)
+## Create C# testing project (.NET 9.0)
 ```sh
-dotnet new xunit --language C# --framework net7.0 --name InternetRelayChat.Tests
+dotnet new xunit --language C# --framework net9.0 --name InternetRelayChat.Tests
 ```
 
 ## Add projects to solution
