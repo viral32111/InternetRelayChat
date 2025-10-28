@@ -13,7 +13,7 @@
 		<RepositoryUrl>https://github.com/viral32111/InternetRelayChat</RepositoryUrl>
 		<NeutralLanguage>en-GB</NeutralLanguage>
 
-		<FileVersion>0.1.1</FileVersion>
+		<FileVersion>0.1.2</FileVersion>
 		<Version>$(FileVersion)</Version>
 		<AssemblyName>$(Authors).$(MSBuildProjectName)</AssemblyName>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
