@@ -81,13 +81,11 @@ namespace viral32111.InternetRelayChat {
 
 		// Parses a single IRC message from a string
 		public static Message Parse(string messageToParse) {
-			if (string.IsNullOrWhiteSpace(messageToParse)) throw new ArgumentException("Message cannot be null, empty, or whitespace", nameof(messageToParse));
+			if (string.IsNullOrWhiteSpace(messageToParse)) throw new ArgumentException($"Message '{messageToParse}' cannot be null, empty, or whitespace");
 
 			// Match the message using the regular expressions
 			Match messageStartMatch = MessageStartPattern.Match(messageToParse);
-			if (messageStartMatch.Success == false) throw new ArgumentException("Message is not a valid IRC message", nameof(messageToParse));
-			Match messageEndMatch = MessageEndPattern.Match(messageToParse[messageStartMatch.Length..]);
-			if (messageEndMatch.Success == false) throw new ArgumentException("Message is not a valid IRC message", nameof(messageToParse));
+			if (messageStartMatch.Success == false) throw new ArgumentException($"Message '{messageToParse}' is not a valid IRC message (start match)");
 
 			// Store all the captured values, they may be null
 			string? tagsCapture = messageStartMatch.Groups["tags"].Value.NullIfWhiteSpace();
@@ -96,12 +94,27 @@ namespace viral32111.InternetRelayChat {
 			string? hostCapture = messageStartMatch.Groups["host"].Value.NullIfWhiteSpace();
 			string? commandCapture = messageStartMatch.Groups["command"].Value.NullIfWhiteSpace();
 			string? subCommandCapture = messageStartMatch.Groups["subcommand"].Value.NullIfWhiteSpace();
-			string? middleCapture = messageEndMatch.Groups["middle"].Value.NullIfWhiteSpace();
-			string? paramsCapture = messageEndMatch.Groups["params"].Value.NullIfWhiteSpace();
+
+			string messageEnd = messageToParse[messageStartMatch.Length..]; // .Trim();
+			string? middleCapture = null;
+			string? paramsCapture = null;
+			try {
+				Match messageEndMatch = MessageEndPattern.Match(messageEnd);
+				if (messageEndMatch.Success == false) throw new ArgumentException($"Message '{messageEnd}' (from '{messageToParse}') is not a valid IRC message (end match)");
+
+				middleCapture = messageEndMatch.Groups["middle"].Value.NullIfWhiteSpace();
+				paramsCapture = messageEndMatch.Groups["params"].Value.NullIfWhiteSpace();
+			} catch (ArgumentException) {
+				Match simpleEndMatch = new Regex(@"^\s*(?'middle'.+)\s:(?'params'.+)$").Match(messageEnd.Trim());
+				if (!simpleEndMatch.Success) throw new ArgumentException($"Message '{messageEnd}' (from '{messageToParse}') is not a valid IRC message (simple end match)");
+
+				middleCapture = simpleEndMatch.Groups["middle"].Value.NullIfWhiteSpace();
+				paramsCapture = simpleEndMatch.Groups["params"].Value.NullIfWhiteSpace();
+			}
 
 			// Create a message object using captured values, the command is required
 			return new(
-				command: commandCapture ?? throw new Exception("No command found in IRC message"),
+				command: commandCapture ?? throw new Exception($"No command found in IRC message '{messageToParse}'"),
 				tags: tagsCapture != null ? Tags.FromDictionary(Tags.Parse(tagsCapture)) : null,
 				nick: nickCapture,
 				user: userCapture,
@@ -110,6 +123,7 @@ namespace viral32111.InternetRelayChat {
 				middle: middleCapture,
 				parameters: paramsCapture
 			);
+
 		}
 
 		// Parses a single IRC message from a byte array, defaults to UTF-8

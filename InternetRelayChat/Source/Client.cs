@@ -225,6 +225,7 @@ public class Client {
 	public async Task SendAsync(Message message, CancellationToken? cancellationToken = null) {
 		if (!IsConnected()) throw new InvalidOperationException("Client not connected");
 
+		// Console.WriteLine($"Sending message '{message}'...");
 		logger.LogDebug($"Sending message '{message}'...");
 
 		byte[] messageBytes = message.GetBytes();
@@ -317,7 +318,6 @@ public class Client {
 		if (!IsConnected()) throw new InvalidOperationException("Client not connected");
 
 		logger.LogDebug("Started receiving messages...");
-
 		while (IsConnected() && !cancellationToken.IsCancellationRequested) {
 			Message[] messages = await ReceiveAsync(cancellationToken: cancellationToken);
 			logger.LogDebug($"Received {messages.Length} message(s).");

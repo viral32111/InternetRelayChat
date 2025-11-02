@@ -19,6 +19,12 @@ This [was originally hardcoded into the bot](https://github.com/viral32111/twitc
 
 I also wanted a project to try out automated unit testing and test-driven development in .NET for the first time.
 
+## 🏗️ Development
+
+1. `dotnet restore`
+2. `dotnet build --nologo --configuration Release --no-restore`
+3. `dotnet pack --nologo --configuration Release --no-build`
+
 ## ⚖️ License
 
 Copyright (C) 2023 [viral32111](https://viral32111.com).
