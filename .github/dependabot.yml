@@ -1,26 +1,53 @@
 version: 2
 updates:
-
-  # Workflows
+  # .github/workflows/*.yml
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: monthly
+      interval: weekly
+      day: saturday
+      time: "09:00"
+      timezone: Europe/London
+    groups:
+      default:
+        patterns:
+          - "*"
 
   # Package
   - package-ecosystem: nuget
     directory: /InternetRelayChat/
     schedule:
-      interval: monthly
+      interval: weekly
+      day: saturday
+      time: "09:00"
+      timezone: Europe/London
+    groups:
+      default:
+        patterns:
+          - "*"
 
   # Examples
   - package-ecosystem: nuget
     directory: /InternetRelayChat.Examples/
     schedule:
-      interval: monthly
+      interval: weekly
+      day: saturday
+      time: "09:00"
+      timezone: Europe/London
+    groups:
+      default:
+        patterns:
+          - "*"
 
   # Tests
   - package-ecosystem: nuget
     directory: /InternetRelayChat.Tests/
     schedule:
-      interval: monthly
+      interval: weekly
+      day: saturday
+      time: "09:00"
+      timezone: Europe/London
+    groups:
+      default:
+        patterns:
+          - "*"
